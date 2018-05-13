@@ -75,6 +75,7 @@ public class Config {
     public static String ASSEMBLE_FRAGMENT_TABLE = "assemble_fragment";
     public static String ASSEMBLE_FRAGMENT_QUESTION_TABLE = "assemble_fragment_question";
     public static String RDF_TABLE = "rdf";
+    public static String COURSE_WANGYUAN_TABLE = "course_wangyuan";
 
     /**
      * 爬虫

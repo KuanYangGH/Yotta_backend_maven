@@ -209,6 +209,13 @@ public class DatabaseUtils {
                 "  `logDate` varchar(100) DEFAULT NULL COMMENT '访问时间',\n" +
                 "  PRIMARY KEY (`id`)\n" +
                 ") ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;";
+        String sqlCourseWangyuan = "CREATE TABLE IF NOT EXISTS `course_wangyuan` (\n" +
+                "  `courseId` int(11) NOT NULL COMMENT '网院课程id',\n" +
+                "  `courseName` varchar(255) DEFAULT NULL COMMENT '网院课程名',\n" +
+                "  `courseWiki` varchar(255) DEFAULT NULL COMMENT '中文维基课程名',\n" +
+                "  `courseCode` varchar(255) DEFAULT NULL COMMENT '网院课程编号',\n" +
+                "  PRIMARY KEY (`courseId`)\n" +
+                ") ENGINE=MyISAM DEFAULT CHARSET=utf8;";
         try {
             mysql.addDeleteModify(sqlAssembleFragment, params);
             mysql.addDeleteModify(sqlAssembleFragmentQuestion, params);
@@ -228,6 +235,7 @@ public class DatabaseUtils {
             mysql.addDeleteModify(sqlUnaddImage, params);
             mysql.addDeleteModify(sqlUserInfo, params);
             mysql.addDeleteModify(sqlUserLog, params);
+            mysql.addDeleteModify(sqlCourseWangyuan, params);
         } catch (Exception e) {
             e.printStackTrace();
         }
