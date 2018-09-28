@@ -33,6 +33,7 @@ public class Config {
     public static String MYSQL_URL = "jdbc:mysql://" + HOST + ":" + PORT + "/" + DBNAME + "?user=" + USERNAME + "&password=" + PASSWD + "&characterEncoding=UTF8"; // 阿里云服务器：域名+http端口
 
 //    public static String MYSQL_URL = "jdbc:mysql://localhost:3306/yotta_create_test?user=root&password=root&characterEncoding=UTF8"; // 阿里云服务器：域名+http端口
+
     public static String IP1 = "http://202.117.54.39:666"; // 跨域访问控制：域名+apache端口
     public static String IP2 = "http://202.117.54.39:8081/Yotta"; // 阿里云服务器：域名+http端口
     public static String SWAGGERHOST = "202.117.54.39:8081"; // swagger主机

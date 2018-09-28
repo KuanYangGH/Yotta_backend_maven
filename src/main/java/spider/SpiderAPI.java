@@ -101,6 +101,37 @@ public class SpiderAPI {
         return response;
     }
 
+    @GET
+    @Path("/getAssembleByID")
+    @ApiOperation(value = "根据碎片ID，获得已装配碎片的信息", notes = "根据碎片ID，获得已装配碎片的信息")
+    @ApiResponses(value = {
+            @ApiResponse(code = 401, message = "MySql数据库  查询失败"),
+            @ApiResponse(code = 200, message = "MySql数据库  查询成功", response = String.class)})
+    @Consumes("application/x-www-form-urlencoded" + ";charset=" + "UTF-8")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=" + "UTF-8")
+    public static Response getAssembleByID(
+            @ApiParam(value = "碎片ID", required = true) @QueryParam("FragmentID") int FragmentID
+    ) {
+        Response response = null;
+        /**
+         * 获得碎片信息
+         */
+        mysqlUtils mysql = new mysqlUtils();
+        String sql = "select * from " + Config.ASSEMBLE_FRAGMENT_TABLE + " where FragmentID=?";
+        List<Object> params = new ArrayList<Object>();
+        params.add(FragmentID);
+        try {
+            List<Map<String, Object>> results = mysql.returnMultipleResult(sql, params);
+            response = Response.status(200).entity(results).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            response = Response.status(401).entity(new error(e.toString())).build();
+        } finally {
+            mysql.closeconnection();
+        }
+        return response;
+    }
+
     @POST
     @Path("/getFragmentCountBySource")
     @ApiOperation(value = "根据课程和主题，得到每个数据源下碎片数量分布", notes = "根据课程和主题，得到每个数据源下碎片数量分布")
@@ -1024,6 +1055,44 @@ public class SpiderAPI {
         params.add(FragmentUrl);
         params.add(SourceName);
         params.add(FragmentID);
+        try {
+            result = mysql.addDeleteModify(sql, params);
+            if (result) {
+                return Response.status(200).entity(new success("碎片更新成功~")).build();
+            } else {
+                return Response.status(401).entity(new error("碎片更新失败~")).build();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.status(402).entity(new error(e.getMessage())).build();
+        } finally {
+            mysql.closeconnection();
+        }
+    }
+
+    @POST
+    @Path("/updateAssemble")
+    @ApiOperation(value = "更新已装配碎片", notes = "更新已装配碎片")
+    @ApiResponses(value = {
+            @ApiResponse(code = 402, message = "数据库错误", response = error.class),
+            @ApiResponse(code = 200, message = "正常返回结果", response = success.class)})
+    @Consumes("application/x-www-form-urlencoded" + ";charset=" + "UTF-8")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=" + "UTF-8")
+    public static Response updateAssemble(
+            @FormParam("FragmentID") String FragmentID,
+            @FormParam("FragmentContent") String FragmentContent
+    ) {
+        /**
+         * 创建碎片
+         */
+        boolean result = false;
+        mysqlUtils mysql = new mysqlUtils();
+        String sql = "update " + Config.ASSEMBLE_FRAGMENT_TABLE + " set FragmentContent = ?,Text= ? where FragmentID = ?";
+        List<Object> params = new ArrayList<Object>();
+        params.add(FragmentContent);
+        params.add(JsoupDao.parseHtmlText(FragmentContent.toString()).text());
+        params.add(FragmentID);
+
         try {
             result = mysql.addDeleteModify(sql, params);
             if (result) {
